@@ -15,10 +15,15 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
-# from django.contrib import admin
+
 from django.urls import path, include
+from django.contrib import admin
 
 urlpatterns = [
-    path('api-auth/', include('rest_framework.urls' , namespace='rest_framework'))
-    #    path("admin/", admin.site.urls),
+
+    path('api-auth/', include('rest_framework.urls' , namespace='rest_framework')),
+    path("" , include('event_manager.urls' , namespace='event_manager')),
+    path("" , include('user.urls' , namespace='user'))
+
 ]
+app_name = "event_manager"
