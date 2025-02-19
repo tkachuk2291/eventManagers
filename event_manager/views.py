@@ -5,8 +5,6 @@ from rest_framework import viewsets, status
 from rest_framework.generics import UpdateAPIView, DestroyAPIView, GenericAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.views import APIView
-
 from eventManagers import settings
 from event_manager.models import Event
 from event_manager.serializers import EventSerializer, EventCreateSerializer, EventHandlersSerializer
