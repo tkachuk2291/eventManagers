@@ -1,4 +1,5 @@
-from django.template.context_processors import request
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets, status
 from rest_framework.generics import UpdateAPIView, DestroyAPIView, GenericAPIView
 from rest_framework.permissions import IsAuthenticated
@@ -36,9 +37,7 @@ class EventModelViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = Event.objects.all()
         title = self.request.GET.get("title")
-        print(title , "TEST")
         description = self.request.GET.get("description")
-
         date = self.request.GET.get("date")
         location = self.request.GET.get("location")
         organizer = self.request.GET.get("organizer")
@@ -66,48 +65,35 @@ class EventModelViewSet(viewsets.ModelViewSet):
 
         return queryset.distinct()
 
-    # @extend_schema(
-    #     parameters=[
-    #         OpenApiParameter(
-    #             name="name",
-    #             type=OpenApiTypes.STR,
-    #             description="Filter by name of wine name",
-    #         ),
-    #         OpenApiParameter(
-    #             name="country",
-    #             type=OpenApiTypes.STR,
-    #             description="Filter by wine country",
-    #         ),
-    #         OpenApiParameter(
-    #             name="region",
-    #             type=OpenApiTypes.STR,
-    #             description="Filter by wine region",
-    #         ),
-    #         OpenApiParameter(
-    #             name="average",
-    #             type=OpenApiTypes.STR,
-    #             description="Filter by wine average ",
-    #         ),
-    #         OpenApiParameter(
-    #             name="vintage",
-    #             type=OpenApiTypes.INT,
-    #             description="Filter by wine vintage(year)",
-    #         ),
-    #         OpenApiParameter(
-    #             name="wine_type",
-    #             type=OpenApiTypes.STR,
-    #             description="Filter by type of wine (white, red, rose, etc.). Can be used multiple times for multiple types.",
-    #             explode=False,
-    #             style="form",
-    #         )
-    #         ,
-    #         OpenApiParameter(
-    #             name="reviews",
-    #             type=OpenApiTypes.STR,
-    #             description="filtering by reviews of wine",
-    #         )
-    #     ]
-    # )
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name="title",
+                type=OpenApiTypes.STR,
+                description="Filter by title",
+            ),
+            OpenApiParameter(
+                name="description",
+                type=OpenApiTypes.STR,
+                description="Filter by wine description",
+            ),
+            OpenApiParameter(
+                name="date",
+                type=OpenApiTypes.STR,
+                description="Filter by wine date",
+            ),
+            OpenApiParameter(
+                name="location",
+                type=OpenApiTypes.STR,
+                description="Filter by location",
+            ),
+            OpenApiParameter(
+                name="organizer",
+                type=OpenApiTypes.INT,
+                description="Filter by organizer",
+            )
+        ]
+    )
     def list(self, request, *args, **kwargs):
         """filtering for query_params for events by: title, description , date , location , organizer """
         return super().list(request, *args, **kwargs)
@@ -122,15 +108,15 @@ class EventsHandler(UpdateAPIView , DestroyAPIView  ,  GenericAPIView):
 
     def put(self , request , *args, **kwargs):
         partial = kwargs.pop('partial', False)
-        member_ids = request.data.getlist('members')
-        member_ids.append(str(request.user.id))
-        new_data = request.data.copy()
-        new_data.setlist('members', member_ids)
+        member_id = request.user.id
         instance = self.get_object()
-        serializer = self.get_serializer(instance, data=new_data, partial=partial)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-        return Response({"message": "User joined for event"}, status=status.HTTP_204_NO_CONTENT)
+        if not instance.members.filter(id=request.user.id).exists():
+            instance.members.add(member_id)
+            serializer = self.get_serializer(instance, data=request.data, partial=partial)
+            serializer.is_valid(raise_exception=True)
+            self.perform_update(serializer)
+            return Response({"message": "User joined for event"}, status=status.HTTP_200_OK)
+        return Response({"error": "user already exist"}, status=status.HTTP_409_CONFLICT)
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -138,6 +124,6 @@ class EventsHandler(UpdateAPIView , DestroyAPIView  ,  GenericAPIView):
         if instance.members.filter(id=request.user.id).exists():
             instance.members.remove(request.user)
             instance.save()
-            return Response({"message": "User Deleted for event"}, status=status.HTTP_204_NO_CONTENT)
+            return Response({"message": "User Deleted for event"}, status=status.HTTP_200_OK)
 
         return Response({"error": "user not found"}, status=status.HTTP_400_BAD_REQUEST)

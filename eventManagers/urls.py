@@ -18,12 +18,16 @@ Including another URLconf
 
 from django.urls import path, include
 from django.contrib import admin
+from drf_spectacular.views import SpectacularRedocView, SpectacularSwaggerView, SpectacularAPIView
 
 urlpatterns = [
 
     path('api-auth/', include('rest_framework.urls' , namespace='rest_framework')),
     path("" , include('event_manager.urls' , namespace='event_manager')),
-    path("" , include('user.urls' , namespace='user'))
+    path("" , include('user.urls' , namespace='user')),
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 
 ]
 app_name = "event_manager"
