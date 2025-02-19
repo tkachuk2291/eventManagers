@@ -9,7 +9,7 @@ router.register("event", EventModelViewSet, basename="event")
 
 
 urlpatterns = [path("", include(router.urls)),
-               path("event-register/<pk>/", EventsHandler.as_view())
+               path("event-register/<pk>/", EventsHandler.as_view()),
                ]
 
 app_name = "event"

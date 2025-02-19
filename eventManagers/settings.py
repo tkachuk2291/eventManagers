@@ -144,3 +144,11 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=5),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=14),
 }
+
+EMAIL_HOST = 'smtp.ukr.net'
+EMAIL_HOST_USER = 'tkachuk.dev@ukr.net'
+EMAIL_HOST_PASSWORD ='GxMSfofd2isa1LMP'
+EMAIL_PORT = 465
+EMAIL_USE_SSL=True
+EMAIL_TIMEOUT = 300
+DEFAULT_FROM_EMAIL = 'tkachuk.dev@ukr.net'
