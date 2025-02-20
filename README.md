@@ -60,7 +60,7 @@ docker build -t event-manager .
 ```
 
 ```shell
-docker-compose up
+docker compose up
 ```
 ### From Docker
 http://127.0.0.1:8001/
@@ -83,8 +83,8 @@ http://127.0.0.1:8001/
 
 ### Get access to the API for Jwt-Token
 ```
-step one create user via api/user/register
-step two get access token via api/token with Barer
+step one create user via http://127.0.0.1:8001/user_account/ 
+step two get access token via http://127.0.0.1:8001/user/login/
 ```
 
 
@@ -134,7 +134,6 @@ If you use postman don't forget put JWT aces key in headers
 ```
 "login": http://127.0.0.1:8001/user/login/ 
 "refresh-token": http://127.0.0.1:8001/category/  
-"user": http://127.0.0.1:8001/category/  
 ``` 
 
 ``` 
