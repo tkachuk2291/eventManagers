@@ -100,7 +100,7 @@ http://127.0.0.1:8001/api/schema/redoc/
 ```
 
 please note if you use swagger-ui , Bearer will automatically add , you just need to add the access key
-![img_1.png](img_1.png)
+![img_1.png](https://i.imgur.com/POdZRjX.png)
 
 
 ### JWTToken  & Endpoint 
@@ -110,7 +110,7 @@ please note if you use swagger-ui , Bearer will automatically add , you just nee
 Use format Authorization | Bearer and token  
  ```
 
-![img.png](img.png)
+![img.png](https://i.imgur.com/jogB2sX.png)
 
 
 **Browser actions**
